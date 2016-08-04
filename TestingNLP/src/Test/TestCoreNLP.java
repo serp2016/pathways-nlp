@@ -1,5 +1,7 @@
 package Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -18,6 +20,7 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
+import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
@@ -30,7 +33,7 @@ public class TestCoreNLP {
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
         
         // read some text in the text variable
-        String text = "Check immediately whether people currently have chest pain. ";
+        String text = "Check immediately whether people currently have chest pain.";
         
         // create an empty Annotation just with the given text
         Annotation document = new Annotation(text);
@@ -43,6 +46,8 @@ public class TestCoreNLP {
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 
         boolean questionTag = false;
+        String initialToken = "Do";
+        String extraction = "";
         System.out.println("word\tpos\tlemma\tne");
         for(CoreMap sentence: sentences) {
              // traversing the words in the current sentence
@@ -55,13 +60,28 @@ public class TestCoreNLP {
                 // this is the NER label of the token
                 String ne = token.get(NamedEntityTagAnnotation.class);
                 String lemma = token.get(LemmaAnnotation.class);
+                //check if there is "be" inside question.
+                if(pos.startsWith("VB")){
+                	if(lemma.toLowerCase().equals("be")){
+                		initialToken = "Is";
+                		}
+                }
+                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
+                if(questionTag){
+                	if(word.toLowerCase().matches("[a-z ]+"))
+                	extraction += " " + word;
+                }
+                // check the key words to identify question
                 if(pos.equals("IN")){
                 	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
                 		questionTag = true;
                 }
-                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
             }
-            if(questionTag){System.out.println("Question inside.");}
+            if(questionTag){
+            	System.out.println("Question inside.");
+            	System.out.println(initialToken + extraction + "?");
+            	
+            	}
             // this is the parse tree of the current sentence
             Tree tree = sentence.get(TreeAnnotation.class);
             System.out.println(tree);
