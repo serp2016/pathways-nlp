@@ -17,7 +17,7 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
-import edu.stanford.nlp.sentiment.*;
+import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
 import edu.stanford.nlp.util.CoreMap;
@@ -30,7 +30,7 @@ public class TestCoreNLP {
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
         
         // read some text in the text variable
-        String text = "Add your text here: This is a Clinical Guideline Loader, enter filepath to continue. There are more lines to be extracted in files.";
+        String text = "Check immediately whether people currently have chest pain. ";
         
         // create an empty Annotation just with the given text
         Annotation document = new Annotation(text);
@@ -41,8 +41,9 @@ public class TestCoreNLP {
         // these are all the sentences in this document
         // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
         List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-        
-        System.out.println("word\tpos\tlemma\tner");
+
+        boolean questionTag = false;
+        System.out.println("word\tpos\tlemma\tne");
         for(CoreMap sentence: sentences) {
              // traversing the words in the current sentence
              // a CoreLabel is a CoreMap with additional token-specific methods
@@ -54,9 +55,26 @@ public class TestCoreNLP {
                 // this is the NER label of the token
                 String ne = token.get(NamedEntityTagAnnotation.class);
                 String lemma = token.get(LemmaAnnotation.class);
-                
+                if(pos.equals("IN")){
+                	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
+                		questionTag = true;
+                }
                 System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
             }
+            if(questionTag){System.out.println("Question inside.");}
+            // this is the parse tree of the current sentence
+            Tree tree = sentence.get(TreeAnnotation.class);
+            System.out.println(tree);
+            
+            // this is the Stanford dependency graph of the current sentence
+            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
+            System.out.println(dependencies);
         }
+        // This is the coreference link graph
+        // Each chain stores a set of mentions that link to each other,
+        // along with a method for getting the most representative mention
+        // Both sentence and token offsets start at 1!
+        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
+        
     }
 }
