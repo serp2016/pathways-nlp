@@ -15,14 +15,18 @@ import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
+
 import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
+import edu.stanford.nlp.trees.tregex.TregexMatcher;
+import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.CoreMap;
 
 public class TestCoreNLP {
@@ -33,7 +37,7 @@ public class TestCoreNLP {
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
         
         // read some text in the text variable
-        String text = " therefore whether these guidelines are relevant";
+        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
         
         // create an empty Annotation just with the given text
         Annotation document = new Annotation(text);
@@ -101,17 +105,30 @@ public class TestCoreNLP {
             	}
             // this is the parse tree of the current sentence
             Tree tree = sentence.get(TreeAnnotation.class);
+            TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
+//            TregexPattern Spattern = TregexPattern.compile("@S >> @S");
+            TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
+//            TregexMatcher Smatcher = Spattern.matcher(tree);
+            while (SBARmatcher.findNextMatchingNode()) {
+            	  Tree match = SBARmatcher.getMatch();
+            	  System.out.println(Sentence.listToString(match.yield()));
+            	}
+//            while (Smatcher.findNextMatchingNode()) {
+//          	  Tree match = Smatcher.getMatch();
+//          	  System.out.println(Sentence.listToString(match.yield()));
+//          	}
+            
             System.out.println(tree);
             
-            // this is the Stanford dependency graph of the current sentence
-            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
-            System.out.println(dependencies);
+//            // this is the Stanford dependency graph of the current sentence
+//            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
+//            System.out.println(dependencies);
         }
         // This is the coreference link graph
         // Each chain stores a set of mentions that link to each other,
         // along with a method for getting the most representative mention
         // Both sentence and token offsets start at 1!
-        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
+//        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
         
     }
 }
