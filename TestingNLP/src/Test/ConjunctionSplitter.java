@@ -17,9 +17,8 @@ import edu.stanford.nlp.util.CoreMap;
 public class ConjunctionSplitter
 {
 
-	public static ArrayList<String> ConSplitter(String inputsentence)
+	public static ArrayList<String> conSplitter(String inputsentence)
 	{
-		
 		ArrayList<String> output = new ArrayList<String>();
         Properties props = new Properties();
         props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
@@ -36,13 +35,31 @@ public class ConjunctionSplitter
 	    {
 	    	// this is the parse tree of the current sentence
 	    	Tree tree = sentence.get(TreeAnnotation.class);
-	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR << @SBAR");
-	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
+	    	System.out.println(tree);
 	    	
-	    	while(SBARmatcher.findNextMatchingNode())
+	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
+	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
+	    	if(SBARmatcher.findNextMatchingNode())
 	    	{
-	    		Tree match = SBARmatcher.getMatch();
-	    		output.add(Sentence.listToString(match.yield()));
+	    		SBARmatcher = SBARpattern.matcher(tree);
+		    	while(SBARmatcher.findNextMatchingNode())
+		    	{
+		    		Tree match = SBARmatcher.getMatch();
+		    		if(QuestionIdentifier.questionFlag(Sentence.listToString(match.yield())))
+		    		output.add(Sentence.listToString(match.yield()));
+		    	}
+	    	}
+	    	else
+	    	{
+		    	SBARpattern = TregexPattern.compile("@SBAR >> @ROOT");
+		    	SBARmatcher = SBARpattern.matcher(tree);
+		    	
+		    	while(SBARmatcher.findNextMatchingNode())
+		    	{
+		    		Tree match = SBARmatcher.getMatch();
+		    		if(QuestionIdentifier.questionFlag(Sentence.listToString(match.yield())))
+		    		output.add(Sentence.listToString(match.yield()));
+		    	}
 	    	}
 		}
 		return output;
