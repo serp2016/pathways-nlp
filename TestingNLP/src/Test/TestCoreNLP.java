@@ -29,106 +29,109 @@ import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.CoreMap;
 
-public class TestCoreNLP {
-    public static void main(String[] args) {
-        // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution
-        Properties props = new Properties();
-        props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-        
+public class TestCoreNLP 
+{
+    public static void main(String[] args) 
+    {      
         // read some text in the text variable
-        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
-        
-        // create an empty Annotation just with the given text
-        Annotation document = new Annotation(text);
-        
-        // run all Annotators on this text
-        pipeline.annotate(document);
-        
-        // these are all the sentences in this document
-        // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-        List<CoreMap> sentences = document.get(SentencesAnnotation.class);
+        String text = "Determine whether the chest pain may be cardiac and therefore whether this guideline is relevant, by considering: ";
 
-        boolean questionTag = false;
-        String initialToken = "Do";
-        String extraction = "";
-        System.out.println("word\tpos\tlemma\tne");
-        for(CoreMap sentence: sentences) {
-             // traversing the words in the current sentence
-             // a CoreLabel is a CoreMap with additional token-specific methods
-            for (CoreLabel token: sentence.get(TokensAnnotation.class)) {
-                // this is the text of the token
-                String word = token.get(TextAnnotation.class);
-                // this is the POS tag of the token
-                String pos = token.get(PartOfSpeechAnnotation.class);
-                // this is the NER label of the token
-                String ne = token.get(NamedEntityTagAnnotation.class);
-                String lemma = token.get(LemmaAnnotation.class);
-                //check if there is "be" inside question.
-                if(pos.startsWith("VB")||pos.startsWith("VBZ")){
-                	if(lemma.toLowerCase().equals("be")){
-                		initialToken = "Is";
-                		}
-                }
-                if(pos.startsWith("VBP"))
-                {
-                	if(lemma.toLowerCase().equals("be"))
-                	{
-                		initialToken = "Are";
-                	}
-                }
-                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
-                if(questionTag){  
-                		if(word.toLowerCase().matches("[a-z ]+"))
-                    	{
-                    		if(lemma.equals("be")||pos.equals("MD"))
-                    		{
-                    			word="";
-                    			extraction += word;
-                    		}
-                    		else
-                    		{
-                    			extraction += " " + word;
-                    		}
-                    	}
-                }
-                // check the key words to identify question
-                if(pos.equals("IN")){
-                	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
-                		questionTag = true;
-                }
-            }
-            if(questionTag){
-            	System.out.println("Question inside.");
-            	System.out.println(initialToken + extraction + "?");
-            	
-            	}
-            // this is the parse tree of the current sentence
-            Tree tree = sentence.get(TreeAnnotation.class);
-            TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
-//            TregexPattern Spattern = TregexPattern.compile("@S >> @S");
-            TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
-//            TregexMatcher Smatcher = Spattern.matcher(tree);
-            while (SBARmatcher.findNextMatchingNode()) {
-            	  Tree match = SBARmatcher.getMatch();
-            	  System.out.println(Sentence.listToString(match.yield()));
-            	}
-//            while (Smatcher.findNextMatchingNode()) {
-//          	  Tree match = Smatcher.getMatch();
-//          	  System.out.println(Sentence.listToString(match.yield()));
-//          	}
-            
-            System.out.println(tree);
-            
-//            // this is the Stanford dependency graph of the current sentence
-//            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
-//            System.out.println(dependencies);
+        // check if the text have potential question to be extracted
+        if(QuestionIdentifier.questionFlag(text))
+        {		    
+		    ArrayList<String> input = ConjunctionSplitter.conSplitter(text);
+		    for(int counter = 0; counter < input.size();counter++)
+		    {
+		        // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution
+		        Properties props = new Properties();
+		        props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+		        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+			    Annotation document = new Annotation(input.get(counter));
+			    
+			    // run all Annotators on this text
+			    pipeline.annotate(document);
+			    
+			    // these are all the sentences in this document
+			    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
+			    List<CoreMap> sentences = document.get(SentencesAnnotation.class);	
+//				        System.out.println("word\tpos\tlemma\tne");
+			    
+			    for(CoreMap sentence: sentences) 
+			    {
+			        // required tokens to transform
+			    	boolean extracting = false;
+			        String initialToken = "Do";
+			        String extraction = "";
+			        // traversing the words in the current sentence
+			        // a CoreLabel is a CoreMap with additional token-specific methods        	
+			        for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
+			        {
+			            // this is the text of the token
+			            String word = token.get(TextAnnotation.class);
+			            // this is the POS tag of the token
+			            String pos = token.get(PartOfSpeechAnnotation.class);
+			            // this is the NER label of the token
+			            String ne = token.get(NamedEntityTagAnnotation.class);
+			            String lemma = token.get(LemmaAnnotation.class);
+			            //check if there is "be" inside question.
+			            if(pos.startsWith("VB")||pos.startsWith("VBZ"))
+			            {
+			            	if(lemma.toLowerCase().equals("be"))
+			            	{
+			            		initialToken = "Is";
+			            	}
+			            }
+			            // check if the subject is plural
+			            if(pos.startsWith("VBP"))
+			            {
+			            	if(lemma.toLowerCase().equals("be"))
+			            	{
+			            		initialToken = "Are";
+			            	}
+			            }
+//			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
+			            if(extracting)
+			            {
+		            		if(word.toLowerCase().matches("[a-z ]+"))
+		                	{
+		                		if(lemma.equals("be")||pos.equals("MD"))
+		                		{
+		                			word="";
+		                			extraction += word;
+		                		}
+		                		else
+		                		{
+		                			extraction += " " + word;
+		                		}
+		                	}
+		            		else
+		            		{
+		            			extracting = false;
+		            		}
+//				                if(pos.equals("CC"))
+//				                {
+//				                	if(word.toLowerCase().matches("and")||word.toLowerCase().matches("or"))
+//				                	{
+//				                		conjunctionTag = true;
+//				                	}
+//				                }
+			            }
+	                    if(pos.equals("IN")){
+	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
+	                    		extracting = true;
+	                    }
+			        }
+			        	System.out.println(initialToken + extraction + "?");
+//			            // this is the Stanford dependency graph of the current sentence
+//			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
+//			            System.out.println(dependencies);
+			    }
+			    // This is the coreference link graph
+			    // Each chain stores a set of mentions that link to each other,
+			    // along with a method for getting the most representative mention
+			    // Both sentence and token offsets start at 1!
+//				        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
+		    }
         }
-        // This is the coreference link graph
-        // Each chain stores a set of mentions that link to each other,
-        // along with a method for getting the most representative mention
-        // Both sentence and token offsets start at 1!
-//        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
-        
     }
 }
