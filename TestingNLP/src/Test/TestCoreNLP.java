@@ -34,7 +34,7 @@ public class TestCoreNLP
     public static void main(String[] args) 
     {      
         // read some text in the text variable
-        String text = "Do not use people's response to glyceryl trinitrate (GTN) to make a diagnosis.";
+        String text = "Determine whether the chest pain may be cardiac and therefore whether this guideline is relevant, by considering: ";
 
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(text))
