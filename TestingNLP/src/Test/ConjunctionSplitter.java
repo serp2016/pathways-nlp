@@ -35,7 +35,12 @@ public class ConjunctionSplitter
 	    {
 	    	// this is the parse tree of the current sentence
 	    	Tree tree = sentence.get(TreeAnnotation.class);
+<<<<<<< HEAD
 	    	System.out.println(tree);
+=======
+	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
+	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
+>>>>>>> refs/remotes/origin/IIES0.1.0
 	    	
 	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
 	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
