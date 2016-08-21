@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/Users/Charles/Desktop/MSE5 Project/Prototype/stanford-corenlp-full-2015-12-09/stanford-corenlp-3.6.0.jar"/>
 	<classpathentry kind="lib" path="/Users/Charles/Desktop/MSE5 Project/Prototype/stanford-corenlp-full-2015-12-09/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="/Users/Charles/Desktop/MSE5 Project/Prototype/stanford-corenlp-full-2015-12-09/slf4j-simple.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

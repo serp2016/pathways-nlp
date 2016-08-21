@@ -1,45 +1,31 @@
-package Test;
+package AutoTest;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
-import edu.stanford.nlp.dcoref.CorefChain;
-import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
+import Test.ConjunctionSplitter;
+import Test.QuestionIdentifier;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.PartOfSpeechAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.Sentence;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.semgraph.SemanticGraph;
-import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations.CollapsedCCProcessedDependenciesAnnotation;
-import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
-
-import edu.stanford.nlp.trees.GrammaticalRelation;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreeCoreAnnotations.TreeAnnotation;
-import edu.stanford.nlp.trees.tregex.TregexMatcher;
-import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.util.CoreMap;
 
-public class TestCoreNLP 
+public class Junit 
 {
-    public static void main(String[] args) 
-    {      
-        // read some text in the text variable
-        String text = "Determine whether the chest pain may be cardiac or cornic and therefore whether this guideline is relevant, by considering: ";
-
+	public static String chestPainExamples(String guidelineText)
+	{
+		String questionExtraction = "";
         // check if the text have potential question to be extracted
-        if(QuestionIdentifier.questionFlag(text))
+        if(QuestionIdentifier.questionFlag(guidelineText))
         {		    
-		    ArrayList<String> input = ConjunctionSplitter.conSplitter(text);
+		    ArrayList<String> input = ConjunctionSplitter.conSplitter(guidelineText);
 		    for(int counter = 0; counter < input.size();counter++)
 		    {
 		        // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution
@@ -53,12 +39,10 @@ public class TestCoreNLP
 			    
 			    // these are all the sentences in this document
 			    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-			    List<CoreMap> sentences = document.get(SentencesAnnotation.class);	
-//				        System.out.println("word\tpos\tlemma\tne");
-			    
+			    List<CoreMap> sentences = document.get(SentencesAnnotation.class);			    
 			    for(CoreMap sentence: sentences) 
 			    {
-			        // required tokens to transform
+			        // switch of extracting action
 			    	boolean extracting = false;
 			        String initialToken = "Do";
 			        String extraction = "";
@@ -89,7 +73,6 @@ public class TestCoreNLP
 			            		initialToken = "Are";
 			            	}
 			            }
-//			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
 			            if(extracting)
 			            {
 		            		if(word.toLowerCase().matches("[a-z ]+"))
@@ -108,13 +91,6 @@ public class TestCoreNLP
 		            		{
 		            			extracting = false;
 		            		}
-//				                if(pos.equals("CC"))
-//				                {
-//				                	if(word.toLowerCase().matches("and")||word.toLowerCase().matches("or"))
-//				                	{
-//				                		conjunctionTag = true;
-//				                	}
-//				                }
 			            }
 	                    if(pos.equals("IN")){
 	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
@@ -122,16 +98,15 @@ public class TestCoreNLP
 	                    }
 			        }
 			        	System.out.println(initialToken + extraction + "?");
-//			            // this is the Stanford dependency graph of the current sentence
-//			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
-//			            System.out.println(dependencies);
+			        	questionExtraction += "#* " + initialToken + extraction + "?";
 			    }
-			    // This is the coreference link graph
-			    // Each chain stores a set of mentions that link to each other,
-			    // along with a method for getting the most representative mention
-			    // Both sentence and token offsets start at 1!
-//				        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
 		    }
         }
-    }
+        else
+        {
+        	questionExtraction = "No question found.";
+        }
+        return questionExtraction;
+	}
+
 }
