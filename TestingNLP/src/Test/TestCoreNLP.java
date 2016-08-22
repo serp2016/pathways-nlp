@@ -1,11 +1,14 @@
 package Test;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import Test.DbConnector;
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
@@ -31,11 +34,15 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class TestCoreNLP 
 {
-    public static void main(String[] args) 
+    public static void main(String[] args) throws SQLException 
     {      
         // read some text in the text variable
-        String text = "Determine whether the chest pain may be cardiac or cornic and therefore whether this guideline is relevant, by considering: ";
-
+    	String extractedText;
+    	String guideline_id = "1";
+        String text = "When an ACS is suspected, start management immediately in the order appropriate to the circumstances";
+//		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
+//		java.sql.Connection myConn = DbConnector.getConnection();
+//		PreparedStatement pstmt = myConn.prepareStatement(sql);
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(text))
         {		    
@@ -92,7 +99,7 @@ public class TestCoreNLP
 //			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
 			            if(extracting)
 			            {
-		            		if(word.toLowerCase().matches("[a-z ]+"))
+		            		if(word.toLowerCase().matches("[a-z -]+"))
 		                	{
 		                		if(lemma.equals("be")||pos.equals("MD"))
 		                		{
@@ -116,12 +123,17 @@ public class TestCoreNLP
 //				                	}
 //				                }
 			            }
-	                    if(pos.equals("IN")){
-	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
+	                    if(pos.equals("IN")||pos.equals("WRB")){
+	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
 	                    		extracting = true;
 	                    }
 			        }
-			        	System.out.println(initialToken + extraction + "?");
+			        extractedText = initialToken + extraction + "?";
+//			        pstmt.setString(1, extractedText);
+//					pstmt.setString(2, guideline_id);
+//					pstmt.executeUpdate();
+//					System.out.println("Insert Complete!");
+			        System.out.println(extractedText);
 //			            // this is the Stanford dependency graph of the current sentence
 //			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 //			            System.out.println(dependencies);
