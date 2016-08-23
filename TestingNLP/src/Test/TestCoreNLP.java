@@ -39,7 +39,7 @@ public class TestCoreNLP
         // read some text in the text variable
     	String extractedText;
     	String guideline_id = "1";
-        String text = "When an ACS is suspected, start management immediately in the order appropriate to the circumstances";
+        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);

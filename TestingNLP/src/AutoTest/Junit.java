@@ -19,6 +19,10 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class Junit 
 {
+	public static boolean questionTag(String guidelineText)
+	{
+		return true;
+	}
 	public static String chestPainExamples(String guidelineText)
 	{
 		String questionExtraction = "";
@@ -54,8 +58,6 @@ public class Junit
 			            String word = token.get(TextAnnotation.class);
 			            // this is the POS tag of the token
 			            String pos = token.get(PartOfSpeechAnnotation.class);
-			            // this is the NER label of the token
-			            String ne = token.get(NamedEntityTagAnnotation.class);
 			            String lemma = token.get(LemmaAnnotation.class);
 			            //check if there is "be" inside question.
 			            if(pos.startsWith("VB")||pos.startsWith("VBZ"))
