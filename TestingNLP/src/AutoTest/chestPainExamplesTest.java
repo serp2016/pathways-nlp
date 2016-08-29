@@ -19,8 +19,8 @@ public class chestPainExamplesTest
 	    private String guidelineText;
 	    private String extraction;
 
-	    // Inject via constructor
-	    // for {"Check immediately whether people currently have chest pain.", "#* Do people currently have chest pain?"}, guidelineText = "Check immediately whether people currently have chest pain.", extraction = "#* Do people currently have chest pain?"
+	    // inject via constructor
+	    // for instance {"Check immediately whether people currently have chest pain.", "#* Do people currently have chest pain?"}, guidelineText = "Check immediately whether people currently have chest pain.", extraction = "#* Do people currently have chest pain?"
 	    public chestPainExamplesTest(String guidelineText, String extraction) 
 	    {
 	        this.guidelineText = guidelineText;

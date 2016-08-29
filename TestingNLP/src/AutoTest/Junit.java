@@ -19,10 +19,48 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class Junit 
 {
-	public static boolean questionTag(String guidelineText)
+	// this test is to test if questions have been correctly identified
+	public static boolean questionIdentifier(String material)
 	{
-		return true;
+		boolean questionTag = false;
+		Properties props = new Properties();
+		props.put("annotators", "tokenize, ssplit, pos");
+		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+		Annotation document = new Annotation(material);
+		pipeline.annotate(document);
+		List<CoreMap> sentences = document.get(SentencesAnnotation.class);      
+		for(CoreMap sentence: sentences) 
+		{
+			// traversing the words in the current sentence
+			// a CoreLabel is a CoreMap with additional token-specific methods        	
+			for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
+			{
+				// this is the text of the token
+				String word = token.get(TextAnnotation.class);
+				// this is the POS tag of the token
+				String pos = token.get(PartOfSpeechAnnotation.class);
+				// check the key words to identify question
+				if(pos.equals("IN")||pos.equals("WRB"))
+				{
+					if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
+						questionTag = true;
+				}
+			}
+			// if there is a question found in material
+			if(questionTag)
+			{
+				System.out.println(material); 
+				System.out.println("Question inside.");      	
+			}
+			else
+			{
+				System.out.println("No question found.");  
+			}
+		}
+      return questionTag;
 	}
+	
+	// this method is to test if the question has been transformed into right format
 	public static String chestPainExamples(String guidelineText)
 	{
 		String questionExtraction = "";
