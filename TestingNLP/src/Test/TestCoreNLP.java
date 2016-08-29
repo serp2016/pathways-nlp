@@ -38,8 +38,8 @@ public class TestCoreNLP
     {      
         // read some text in the text variable
     	String extractedText;
-    	String guideline_id = "1";
-        String text = "When an ACS is suspected, start management immediately in the order appropriate to the circumstances";
+//    	String guideline_id = "1";
+        String text = "People who experience fertility problems should be informed that they may nd it helpful to contact a fertility support group.";
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);
@@ -69,6 +69,7 @@ public class TestCoreNLP
 			    	boolean extracting = false;
 			        String initialToken = "Do";
 			        String extraction = "";
+			    	String extractedNNS = "";
 			        // traversing the words in the current sentence
 			        // a CoreLabel is a CoreMap with additional token-specific methods        	
 			        for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
@@ -94,6 +95,13 @@ public class TestCoreNLP
 			            	if(lemma.toLowerCase().equals("be"))
 			            	{
 			            		initialToken = "Are";
+			            	}
+			            }
+			            if(pos.startsWith("NNS"))
+			            {
+			            	if(word.toLowerCase().equals("people")||word.toLowerCase().equals("women"))
+			            	{
+			            		extractedNNS = " "+ word.toLowerCase(); 
 			            	}
 			            }
 //			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
@@ -123,12 +131,13 @@ public class TestCoreNLP
 //				                	}
 //				                }
 			            }
-	                    if(pos.equals("IN")||pos.equals("WRB")){
-	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
+	                    if(pos.equals("IN")||pos.equals("WRB")||pos.equals("WP")){
+	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when"))||(word.toLowerCase().equals("who")))
 	                    		extracting = true;
 	                    }
+	                    
 			        }
-			        extractedText = initialToken + extraction + "?";
+			        extractedText = initialToken + extractedNNS + extraction + "?";
 //			        pstmt.setString(1, extractedText);
 //					pstmt.setString(2, guideline_id);
 //					pstmt.executeUpdate();

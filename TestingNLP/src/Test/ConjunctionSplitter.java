@@ -38,6 +38,19 @@ public class ConjunctionSplitter
 	    	
 	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
 	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
+	    	TregexPattern NPpattern = TregexPattern.compile("@NP >> @ROOT");
+	    	TregexMatcher NPmatcher = NPpattern.matcher(tree);
+	    	
+	    	if(NPmatcher.findNextMatchingNode())
+	    	{
+	    		NPmatcher = NPpattern.matcher(tree);
+		    	while(NPmatcher.findNextMatchingNode())
+		    	{
+		    		Tree match = NPmatcher.getMatch();
+		    		if(QuestionIdentifier.questionFlag(Sentence.listToString(match.yield())))
+		    		output.add(Sentence.listToString(match.yield()));
+		    	}
+	    	}
 	    	if(SBARmatcher.findNextMatchingNode())
 	    	{
 	    		SBARmatcher = SBARpattern.matcher(tree);
@@ -61,6 +74,7 @@ public class ConjunctionSplitter
 		    	}
 	    	}
 		}
+	    
 		return output;
 	}
 	
