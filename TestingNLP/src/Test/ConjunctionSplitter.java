@@ -38,7 +38,7 @@ public class ConjunctionSplitter
 	    	
 	    	TregexPattern SBARpattern = TregexPattern.compile("@SBAR >> @SBAR");
 	    	TregexMatcher SBARmatcher = SBARpattern.matcher(tree);
-	    	TregexPattern NPpattern = TregexPattern.compile("@NP >> @ROOT");
+	    	TregexPattern NPpattern = TregexPattern.compile("@NP > (@S > @ROOT)");
 	    	TregexMatcher NPmatcher = NPpattern.matcher(tree);
 	    	
 	    	if(NPmatcher.findNextMatchingNode())
@@ -51,6 +51,7 @@ public class ConjunctionSplitter
 		    		output.add(Sentence.listToString(match.yield()));
 		    	}
 	    	}
+	    	else{
 	    	if(SBARmatcher.findNextMatchingNode())
 	    	{
 	    		SBARmatcher = SBARpattern.matcher(tree);
@@ -74,7 +75,7 @@ public class ConjunctionSplitter
 		    	}
 	    	}
 		}
-	    
+	    }
 		return output;
 	}
 	

@@ -39,7 +39,7 @@ public class TestCoreNLP
         // read some text in the text variable
     	String extractedText;
 //    	String guideline_id = "1";
-        String text = "People who experience fertility problems should be informed that they may nd it helpful to contact a fertility support group.";
+        String text = "Determine whether the chest pain may be cardiac and therefore whether this guideline is relevant, by considering: ";
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);
