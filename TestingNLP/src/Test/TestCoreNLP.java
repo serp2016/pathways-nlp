@@ -37,9 +37,10 @@ public class TestCoreNLP
     public static void main(String[] args) throws SQLException 
     {      
         // read some text in the text variable
-    	String extractedText;
+    	String extractedText = null;
+    	boolean WhoExtractingTag = false;
 //    	String guideline_id = "1";
-        String text = "Determine whether the chest pain may be cardiac and therefore whether this guideline is relevant, by considering: ";
+        String text = "People who are using articial insemination to conceive should have their insemination timed around ovulation.";
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);
@@ -131,13 +132,28 @@ public class TestCoreNLP
 //				                	}
 //				                }
 			            }
-	                    if(pos.equals("IN")||pos.equals("WRB")||pos.equals("WP")){
-	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when"))||(word.toLowerCase().equals("who")))
+	                    if(pos.equals("IN")||pos.equals("WRB")){
+	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
 	                    		extracting = true;
 	                    }
-	                    
+	                    if(pos.equals("WP"))
+	                    {
+	                    	if(word.toLowerCase().equals("who"))
+	                    	{
+	                    		WhoExtractingTag = true;
+	                    		extracting = true;
+	                    	}
+	                    }
 			        }
-			        extractedText = initialToken + extractedNNS + extraction + "?";
+			        if(WhoExtractingTag==true)
+			        {
+			        	extractedText = initialToken + extractedNNS + extraction + "?";
+			        }
+			        else
+			        {
+			        	extractedText = initialToken + extraction + "?";
+			        }
+			        
 //			        pstmt.setString(1, extractedText);
 //					pstmt.setString(2, guideline_id);
 //					pstmt.executeUpdate();
