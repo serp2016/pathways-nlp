@@ -21,9 +21,8 @@ public class DbConnector {
 		return lConnection;
 	}
 	
-	public static void questionTableInserter(String extractedText) throws SQLException 
+	public static void questionTableInserter(String extractedText,String guideline_id) throws SQLException 
 	{
-		String guideline_id = "1";
 		String sql = "insert into questions " + "(questions_content,guideline_id)"+"values(?,?)";
 		java.sql.Connection myConn = DbConnector.getConnection();
 		PreparedStatement pstmt = myConn.prepareStatement(sql);
@@ -35,14 +34,16 @@ public class DbConnector {
 	public static ArrayList<String> sentencesTableLoader() throws SQLException
 	{
 		ArrayList<String> inputSet = new ArrayList<String>();
-		java.sql.Connection myConn = DbConnector.getConnection();
-		String sql1 = "SELECT sentence_content FROM sentences";
+		ArrayList<String> guideline_idSet = new ArrayList<String>();
+ 		java.sql.Connection myConn = DbConnector.getConnection();
+		String sql1 = "SELECT sentence_content,guideline_id FROM sentences";
 
 		PreparedStatement rowsNumpstmt = myConn.prepareStatement(sql1);
 	    ResultSet rs = rowsNumpstmt.executeQuery(sql1);
 	    while(rs.next())
 	    {
 	    		inputSet.add(rs.getString("sentence_content"));
+	    		inputSet.add(rs.getString("guideline_id"));
 	    }
 	    return inputSet;
 	    

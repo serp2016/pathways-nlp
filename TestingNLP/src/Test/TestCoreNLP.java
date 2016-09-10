@@ -38,10 +38,11 @@ public class TestCoreNLP
     {
     	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
     	int rowCounter = DbConnector.sentencesTableRowCounter();
-    	for(int i =1; i<=rowCounter;i++)
+    	for(int i =0; i<=rowCounter-1;i++)
     	{
-    		String text = inputTextSet.get(i-1);
-            TextProcesser.processer(text);
+    		String text = inputTextSet.get(2*i);
+    		String guideline_id = inputTextSet.get(2*i+1);
+            TextProcesser.processer(text,guideline_id);
     	}
     }
     

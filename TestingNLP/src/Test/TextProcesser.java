@@ -19,11 +19,11 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class TextProcesser 
 {
-	public static String processer(String guidelineText) throws SQLException
+	public static String processer(String guidelineText,String transferred_guideline_id) throws SQLException
 	{
 		String questionExtraction = "";
     	boolean WhoExtractingTag = false;
-		
+		String guideline_id = transferred_guideline_id;
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(guidelineText))
         {		    
@@ -124,7 +124,7 @@ public class TextProcesser
 			        	questionExtraction += "#* " + initialToken + extraction + "?";
 			        }
 			        String extractedText = initialToken + extraction + "?";
-			        DbConnector.questionTableInserter(extractedText);
+			        DbConnector.questionTableInserter(extractedText,guideline_id);
 			        System.out.print("Insert Success");
 
 			    }
