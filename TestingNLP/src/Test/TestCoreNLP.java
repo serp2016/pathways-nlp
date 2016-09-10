@@ -35,16 +35,28 @@ import edu.stanford.nlp.util.CoreMap;
 public class TestCoreNLP 
 {
     public static void main(String[] args) throws SQLException 
-    {      
+    {
+    	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
+    	int rowCounter = DbConnector.sentencesTableRowCounter();
+    	for(int i =1; i<=rowCounter;i++)
+    	{
+    		String text = inputTextSet.get(i-1);
+            TextProcesser.processer(text);
+    	}
+    }
+    
+    // restructure after V0.2.2
+    @SuppressWarnings("unused")
+	private void version0_2_2()
+    {
         // read some text in the text variable
-    	String extractedText = null;
-    	boolean WhoExtractingTag = false;
-//    	String guideline_id = "1";
-        String text = "People who are using articial insemination to conceive should have their insemination timed around ovulation.";
+    	String extractedText;
+    	String guideline_id = "1";
+        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);
-        // check if the text have potential question to be extracted
+//         check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(text))
         {		    
 		    ArrayList<String> input = ConjunctionSplitter.conSplitter(text);
@@ -70,7 +82,6 @@ public class TestCoreNLP
 			    	boolean extracting = false;
 			        String initialToken = "Do";
 			        String extraction = "";
-			    	String extractedNNS = "";
 			        // traversing the words in the current sentence
 			        // a CoreLabel is a CoreMap with additional token-specific methods        	
 			        for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
@@ -96,13 +107,6 @@ public class TestCoreNLP
 			            	if(lemma.toLowerCase().equals("be"))
 			            	{
 			            		initialToken = "Are";
-			            	}
-			            }
-			            if(pos.startsWith("NNS"))
-			            {
-			            	if(word.toLowerCase().equals("people")||word.toLowerCase().equals("women"))
-			            	{
-			            		extractedNNS = " "+ word.toLowerCase(); 
 			            	}
 			            }
 //			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
@@ -136,29 +140,13 @@ public class TestCoreNLP
 	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
 	                    		extracting = true;
 	                    }
-	                    if(pos.equals("WP"))
-	                    {
-	                    	if(word.toLowerCase().equals("who"))
-	                    	{
-	                    		WhoExtractingTag = true;
-	                    		extracting = true;
-	                    	}
-	                    }
 			        }
-			        if(WhoExtractingTag==true)
-			        {
-			        	extractedText = initialToken + extractedNNS + extraction + "?";
-			        }
-			        else
-			        {
-			        	extractedText = initialToken + extraction + "?";
-			        }
-			        
+//			        extractedText = initialToken + extraction + "?";
 //			        pstmt.setString(1, extractedText);
 //					pstmt.setString(2, guideline_id);
 //					pstmt.executeUpdate();
 //					System.out.println("Insert Complete!");
-			        System.out.println(extractedText);
+//			        System.out.println(extractedText);
 //			            // this is the Stanford dependency graph of the current sentence
 //			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 //			            System.out.println(dependencies);
