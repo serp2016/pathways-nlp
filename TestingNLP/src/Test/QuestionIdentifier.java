@@ -34,9 +34,14 @@ public class QuestionIdentifier
 				// this is the POS tag of the token
 				String pos = token.get(PartOfSpeechAnnotation.class);
 				// check the key words to identify question
-				if(pos.equals("IN")||pos.equals("WRB"))
+				if(pos.equals("IN"))
 				{
-					if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
+					if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
+						questionTag = true;
+				}
+				if(pos.equals("WRB"))
+				{
+					if(word.toLowerCase().equals("when"))
 						questionTag = true;
 				}
 			}
