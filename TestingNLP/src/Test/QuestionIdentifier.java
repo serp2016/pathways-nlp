@@ -41,7 +41,7 @@ public class QuestionIdentifier
 				}
 				if(pos.equals("WRB"))
 				{
-					if(word.toLowerCase().equals("when"))
+					if((word.toLowerCase().equals("when"))||(word.toLowerCase().equals("who")))
 						questionTag = true;
 				}
 			}

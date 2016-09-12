@@ -36,8 +36,19 @@ public class TestCoreNLP
 {
     public static void main(String[] args) throws SQLException 
     {
+<<<<<<< HEAD
         String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
         TextProcesser.processer(text);
+=======
+    	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
+    	int rowCounter = DbConnector.sentencesTableRowCounter();
+    	for(int i =0; i<=rowCounter-1;i++)
+    	{
+    		String text = inputTextSet.get(2*i);
+    		String guideline_id = inputTextSet.get(2*i+1);
+            TextProcesser.processer(text,guideline_id);
+    	}
+>>>>>>> refs/remotes/origin/IIES_Carlos
     }
     
     // restructure after V0.2.2
@@ -51,7 +62,7 @@ public class TestCoreNLP
 //		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
 //		java.sql.Connection myConn = DbConnector.getConnection();
 //		PreparedStatement pstmt = myConn.prepareStatement(sql);
-        // check if the text have potential question to be extracted
+//         check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(text))
         {		    
 		    ArrayList<String> input = ConjunctionSplitter.conSplitter(text);
@@ -136,12 +147,12 @@ public class TestCoreNLP
 	                    		extracting = true;
 	                    }
 			        }
-			        extractedText = initialToken + extraction + "?";
+//			        extractedText = initialToken + extraction + "?";
 //			        pstmt.setString(1, extractedText);
 //					pstmt.setString(2, guideline_id);
 //					pstmt.executeUpdate();
 //					System.out.println("Insert Complete!");
-			        System.out.println(extractedText);
+//			        System.out.println(extractedText);
 //			            // this is the Stanford dependency graph of the current sentence
 //			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
 //			            System.out.println(dependencies);
