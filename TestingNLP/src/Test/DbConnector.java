@@ -64,5 +64,10 @@ public class DbConnector {
 		return totalNum;
 	}
 	
+	public static void test()
+	{
+		
+	}
+	
 	
 }
