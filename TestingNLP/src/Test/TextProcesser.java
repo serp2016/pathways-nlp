@@ -3,6 +3,9 @@ package Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.CoreAnnotations.LemmaAnnotation;
@@ -16,15 +19,11 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class TextProcesser 
 {
-	public static String processer(String guidelineText)
+	public static String processer(String guidelineText,String transferred_guideline_id) throws SQLException
 	{
-    	String guideline_id = "1";
 		String questionExtraction = "";
-		String titleOfText;
-//		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
-//		java.sql.Connection myConn = DbConnector.getConnection();
-//		PreparedStatement pstmt = myConn.prepareStatement(sql);
-		
+    	boolean WhoExtractingTag = false;
+		String guideline_id = transferred_guideline_id;
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(guidelineText))
         {		    
@@ -49,6 +48,7 @@ public class TextProcesser
 			    	boolean extracting = false;
 			        String initialToken = "Do";
 			        String extraction = "";
+			    	String extractedNNS = "";
 			        // traversing the words in the current sentence
 			        // a CoreLabel is a CoreMap with additional token-specific methods        	
 			        for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
@@ -74,6 +74,13 @@ public class TextProcesser
 			            		initialToken = "Are";
 			            	}
 			            }
+			            if(pos.startsWith("NNS"))
+			            {
+			            	if(word.toLowerCase().equals("people")||word.toLowerCase().equals("women"))
+			            	{
+			            		extractedNNS = " "+ word.toLowerCase(); 
+			            	}
+			            }
 			            if(extracting)
 			            {
 		            		if(word.toLowerCase().matches("[a-z ]+"))
@@ -93,16 +100,33 @@ public class TextProcesser
 		            			extracting = false;
 		            		}
 			            }
-	                    if(pos.equals("IN")){
-	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if")))
+	                    if(pos.equals("IN")||pos.equals("WRB")){
+	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
 	                    		extracting = true;
 	                    }
+	                    if(pos.equals("WP"))
+	                    {
+	                    	if(word.toLowerCase().equals("who"))
+	                    	{
+	                    		WhoExtractingTag = true;
+	                    		extracting = true;
+	                    	}
+	                    }
 			        }
-//			        	pstmt.setString(1, extractedText);
-//						pstmt.setString(2, guideline_id);
-//						pstmt.executeUpdate();
+			        if(WhoExtractingTag==true)
+			        {
+			        	System.out.println(initialToken + extractedNNS + extraction + "?");
+			        	questionExtraction += "#* " + initialToken + extractedNNS + extraction + "?";
+			        }
+			        else
+			        {
 			        	System.out.println(initialToken + extraction + "?");
 			        	questionExtraction += "#* " + initialToken + extraction + "?";
+			        }
+			        String extractedText = initialToken + extraction + "?";
+			        DbConnector.questionTableInserter(extractedText,guideline_id);
+			        System.out.print("Insert Success");
+
 			    }
 		    }
         }

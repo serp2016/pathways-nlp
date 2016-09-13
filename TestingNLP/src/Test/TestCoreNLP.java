@@ -36,122 +36,15 @@ public class TestCoreNLP
 {
     public static void main(String[] args) throws SQLException 
     {
-        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
-        TextProcesser.processer(text);
+    	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
+    	int rowCounter = DbConnector.sentencesTableRowCounter();
+    	for(int i =0; i<=rowCounter-1;i++)
+    	{
+    		String text = inputTextSet.get(2*i);
+    		String guideline_id = inputTextSet.get(2*i+1);
+            TextProcesser.processer(text,guideline_id);
+    	}
     }
     
-    // restructure after V0.2.2
-    @SuppressWarnings("unused")
-	private void version0_2_2()
-    {
-        // read some text in the text variable
-    	String extractedText;
-    	String guideline_id = "1";
-        String text = "Use clinical judgement to decide whether referral is necessary and how urgent this should be.";
-//		String sql = "insert into questions " + "(question_content,guideline_id)"+"values(?,?)";
-//		java.sql.Connection myConn = DbConnector.getConnection();
-//		PreparedStatement pstmt = myConn.prepareStatement(sql);
-        // check if the text have potential question to be extracted
-        if(QuestionIdentifier.questionFlag(text))
-        {		    
-		    ArrayList<String> input = ConjunctionSplitter.conSplitter(text);
-		    for(int counter = 0; counter < input.size();counter++)
-		    {
-		        // creates a StanfordCoreNLP object, with POS tagging, lemmatization, NER, parsing, and coreference resolution
-		        Properties props = new Properties();
-		        props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-		        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-			    Annotation document = new Annotation(input.get(counter));
-			    
-			    // run all Annotators on this text
-			    pipeline.annotate(document);
-			    
-			    // these are all the sentences in this document
-			    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
-			    List<CoreMap> sentences = document.get(SentencesAnnotation.class);	
-//				        System.out.println("word\tpos\tlemma\tne");
-			    
-			    for(CoreMap sentence: sentences) 
-			    {
-			        // required tokens to transform
-			    	boolean extracting = false;
-			        String initialToken = "Do";
-			        String extraction = "";
-			        // traversing the words in the current sentence
-			        // a CoreLabel is a CoreMap with additional token-specific methods        	
-			        for (CoreLabel token: sentence.get(TokensAnnotation.class)) 
-			        {
-			            // this is the text of the token
-			            String word = token.get(TextAnnotation.class);
-			            // this is the POS tag of the token
-			            String pos = token.get(PartOfSpeechAnnotation.class);
-			            // this is the NER label of the token
-			            String ne = token.get(NamedEntityTagAnnotation.class);
-			            String lemma = token.get(LemmaAnnotation.class);
-			            //check if there is "be" inside question.
-			            if(pos.startsWith("VB")||pos.startsWith("VBZ"))
-			            {
-			            	if(lemma.toLowerCase().equals("be"))
-			            	{
-			            		initialToken = "Is";
-			            	}
-			            }
-			            // check if the subject is plural
-			            if(pos.startsWith("VBP"))
-			            {
-			            	if(lemma.toLowerCase().equals("be"))
-			            	{
-			            		initialToken = "Are";
-			            	}
-			            }
-//			                System.out.println(word+"\t"+pos+"\t"+lemma+"\t"+ne);
-			            if(extracting)
-			            {
-		            		if(word.toLowerCase().matches("[a-z -]+"))
-		                	{
-		                		if(lemma.equals("be")||pos.equals("MD"))
-		                		{
-		                			word="";
-		                			extraction += word;
-		                		}
-		                		else
-		                		{
-		                			extraction += " " + word;
-		                		}
-		                	}
-		            		else
-		            		{
-		            			extracting = false;
-		            		}
-//				                if(pos.equals("CC"))
-//				                {
-//				                	if(word.toLowerCase().matches("and")||word.toLowerCase().matches("or"))
-//				                	{
-//				                		conjunctionTag = true;
-//				                	}
-//				                }
-			            }
-	                    if(pos.equals("IN")||pos.equals("WRB")){
-	                    	if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when")))
-	                    		extracting = true;
-	                    }
-			        }
-			        extractedText = initialToken + extraction + "?";
-//			        pstmt.setString(1, extractedText);
-//					pstmt.setString(2, guideline_id);
-//					pstmt.executeUpdate();
-//					System.out.println("Insert Complete!");
-			        System.out.println(extractedText);
-//			            // this is the Stanford dependency graph of the current sentence
-//			            SemanticGraph dependencies = sentence.get(CollapsedCCProcessedDependenciesAnnotation.class);
-//			            System.out.println(dependencies);
-			    }
-			    // This is the coreference link graph
-			    // Each chain stores a set of mentions that link to each other,
-			    // along with a method for getting the most representative mention
-			    // Both sentence and token offsets start at 1!
-//				        Map<Integer, CorefChain> graph = document.get(CorefChainAnnotation.class);
-		    }
-        }
-    }
+    
 }
