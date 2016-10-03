@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,8 +35,9 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class TestCoreNLP 
 {
-    public static void main(String[] args) throws SQLException 
+    public static void main(String[] args) throws SQLException, IOException 
     {
+    	PreProcessing.PreProcessing.preprocesser("/Users/Charles/Desktop/MSE5 Project/Final/Guidelines");
     	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
     	int rowCounter = DbConnector.sentencesTableRowCounter();
     	for(int i =0; i<=rowCounter-1;i++)

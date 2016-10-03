@@ -1,5 +1,6 @@
 package AutoTest;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -26,8 +27,8 @@ public class Junit
 	}
 	
 	// this method is to test if the question has been transformed into right format
-	public static String chestPainExamples(String guidelineText)
+	public static String chestPainExamples(String guidelineText) throws SQLException
 	{
-        return Test.TextProcesser.processer(guidelineText);
+        return Test.TextProcesser.processer(guidelineText,"111");
 	}
 }

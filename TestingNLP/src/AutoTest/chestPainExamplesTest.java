@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -55,7 +56,7 @@ public class chestPainExamplesTest
 	    }
 	    
 	@Test
-	public void testChestPainExamples() 
+	public void testChestPainExamples() throws SQLException 
 	{
 			assertThat(Junit.chestPainExamples(guidelineText), is(extraction));			
 //		fail("Not yet implemented");
