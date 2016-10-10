@@ -37,16 +37,14 @@ public class TestCoreNLP
 {
     public static void main(String[] args) throws SQLException, IOException 
     {
-    	PreProcessing.PreProcessing.preprocesser("/Users/Charles/Desktop/MSE5 Project/Final/Guidelines");
+//    	PreProcessing.PreProcessing.preprocesser("/Users/Charles/Desktop/MSE5 Project/Final/Guidelines");
     	ArrayList<String> inputTextSet =  DbConnector.sentencesTableLoader();
     	int rowCounter = DbConnector.sentencesTableRowCounter();
     	for(int i =0; i<=rowCounter-1;i++)
     	{
     		String text = inputTextSet.get(2*i);
-    		String guideline_id = inputTextSet.get(2*i+1);
+    		int guideline_id = 0;
             TextProcesser.processer(text,guideline_id);
     	}
-    }
-    
-    
+    }   
 }

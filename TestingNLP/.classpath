@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="/Users/Charles/Desktop/MSE5 Project/Prototype/stanford-corenlp-full-2015-12-09/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="/Users/Charles/Desktop/MSE5 Project/Prototype/stanford-corenlp-full-2015-12-09/slf4j-simple.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/Charles/Documents/workspace/pdfbox-app-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/Users/Charles/Documents/workspace/mysql-connector-java-5.1.38-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

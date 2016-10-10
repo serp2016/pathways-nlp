@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(value = Parameterized.class)
-public class chestPainExamplesTest 
+public class textProcesserTest 
 {
 
 	    private String guidelineText;
@@ -22,7 +22,7 @@ public class chestPainExamplesTest
 
 	    // inject via constructor
 	    // for instance {"Check immediately whether people currently have chest pain.", "#* Do people currently have chest pain?"}, guidelineText = "Check immediately whether people currently have chest pain.", extraction = "#* Do people currently have chest pain?"
-	    public chestPainExamplesTest(String guidelineText, String extraction) 
+	    public textProcesserTest(String guidelineText, String extraction) 
 	    {
 	        this.guidelineText = guidelineText;
 	        this.extraction = extraction;
@@ -56,9 +56,9 @@ public class chestPainExamplesTest
 	    }
 	    
 	@Test
-	public void testChestPainExamples() throws SQLException 
+	public void textProcesserExamples() throws SQLException 
 	{
-			assertThat(Junit.chestPainExamples(guidelineText), is(extraction));			
+			assertThat(Junit.textProcesserExamples(guidelineText), is(extraction));			
 //		fail("Not yet implemented");
 	}
 

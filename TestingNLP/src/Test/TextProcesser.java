@@ -19,11 +19,11 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class TextProcesser 
 {
-	public static String processer(String guidelineText,String transferred_guideline_id) throws SQLException
+	public static String processer(String guidelineText) throws SQLException
 	{
 		String questionExtraction = "";
     	boolean WhoExtractingTag = false;
-		String guideline_id = transferred_guideline_id;
+		int guideline_id = DbConnector.guidelineIDfromSen(guidelineText);
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(guidelineText))
         {		    
@@ -115,17 +115,21 @@ public class TextProcesser
 			        }
 			        if(WhoExtractingTag==true)
 			        {
-			        	System.out.println(initialToken + extractedNNS + extraction + "?");
-			        	questionExtraction += "#* " + initialToken + extractedNNS + extraction + "?";
+			        	String singleQuestion = initialToken + extractedNNS + extraction + "?";
+			        	System.out.println(singleQuestion);
+			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	questionExtraction += "#* " + singleQuestion;
 			        }
 			        else
 			        {
-			        	System.out.println(initialToken + extraction + "?");
-			        	questionExtraction += "#* " + initialToken + extraction + "?";
+			        	String singleQuestion = initialToken + extraction + "?";
+			        	System.out.println(singleQuestion);
+			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	questionExtraction += "#* " + singleQuestion;
 			        }
-			        String extractedText = initialToken + extraction + "?";
-			        DbConnector.questionTableInserter(extractedText,guideline_id);
-			        System.out.print("Insert Success");
+//			        String extractedText = initialToken + extraction + "?";
+//			        DbConnector.questionTableInserter(extractedText,guideline_id);
+//			        System.out.print("Insert Success");
 
 			    }
 		    }
