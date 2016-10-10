@@ -5,17 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-
-import com.mysql.jdbc.Statement;
-
 
 public class DbConnector 
-{
-	private int guidelineID = 0;	
+{	
 	public static Connection getConnection() throws SQLException 
 	{
-		// TODO Auto-generated method stub
+		// connecting the online database
 		String dbURL="jdbc:mysql://uoa25ublaow4obx5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/sg9c0pcxq9ylrlms";
 		String Username = "hqz5agko3d4eeipj";
 		String Password = "cf71jiom6phqghi2";
@@ -23,32 +18,32 @@ public class DbConnector
 		return lConnection;
 	}
 	
-	public static void questionTableInserter(String extractedText,String guideline_id) throws SQLException 
+	public static void questionTableInserter(String extractedText, String originalSentence, int guideline_id) throws SQLException 
 	{
 		String sql = "insert into questions " + "(questions_content,guideline_id)"+"values(?,?)";
 		java.sql.Connection myConn = DbConnector.getConnection();
 		PreparedStatement pstmt = myConn.prepareStatement(sql);
     	pstmt.setString(1, extractedText);
-		pstmt.setString(2, guideline_id);
+		pstmt.setInt(2, guideline_id);
 		pstmt.executeUpdate();
+		sentenceQuestionsInserter(sentenceID(originalSentence), questionID(extractedText));
+		myConn.close();
 	}
 	
-	public static ArrayList<String> sentencesTableLoader() throws SQLException
+	public static void sentencesTableLoader() throws SQLException
 	{
-		ArrayList<String> inputSet = new ArrayList<String>();
-		ArrayList<String> guideline_idSet = new ArrayList<String>();
+//		Test.SentenceTable tread = new SentenceTable();
+//		ArrayList<String> inputSet = new ArrayList<String>();
  		java.sql.Connection myConn = DbConnector.getConnection();
-		String sql1 = "SELECT sentence_content,guideline_id FROM sentences";
+		String sql = "SELECT sentence_content FROM sentences";
 
-		PreparedStatement rowsNumpstmt = myConn.prepareStatement(sql1);
-	    ResultSet rs = rowsNumpstmt.executeQuery(sql1);
+		PreparedStatement rowsNumpstmt = myConn.prepareStatement(sql);
+	    ResultSet rs = rowsNumpstmt.executeQuery(sql);
 	    while(rs.next())
 	    {
-	    		inputSet.add(rs.getString("sentence_content"));
-	    		inputSet.add(rs.getString("guideline_id"));
+	    	Test.TextProcesser.processer(rs.getString("sentence_content"));
 	    }
-	    return inputSet;
-	    
+	    myConn.close();    
 	}
 	
 	public static int sentencesTableRowCounter() throws SQLException
@@ -63,6 +58,7 @@ public class DbConnector
 	        totalNum = rs2.getInt("total");
 	    }
 	    System.out.print(totalNum);
+	    myConn.close();
 		return totalNum;
 	}
 	
@@ -117,7 +113,7 @@ public class DbConnector
 	
 	public static int guidelineID(String keyInfo) throws SQLException 
 	{
-		// return the guideline_id using the guidelineName or fileName
+		// return the guideline_id from guidelines table using the guidelineName or fileName
 		int guidelineID = 0;
 		String sql = "SELECT guideline_id FROM guidelines WHERE guidelineName = '" + keyInfo + "'";
 		java.sql.Connection myConn = DbConnector.getConnection();
@@ -140,6 +136,148 @@ public class DbConnector
 		}	
 		myConn.close();		
 		return guidelineID;
+	}
+	
+	public static String guidelineFilenameTrace(int guidelineID) throws SQLException
+	{
+		//return the filename from guidelines table using guideline_id
+		String guidelineFilename = "";
+		String sql = "SELECT filename FROM guidelines WHERE guideline_id = '" + guidelineID + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			guidelineFilename  = result.getString("filename");
+		}	
+		myConn.close();			
+		return guidelineFilename;
+	}
+	
+	public static String guidelinePathTrace(int guidelineID) throws SQLException 
+	{
+		// return the full file path from guidelines table using guideline_id
+		String guidelinePath = "";
+		String sql = "SELECT filepath FROM guidelines WHERE guideline_id = '" + guidelineID + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			guidelinePath  = result.getString("filepath");
+		}	
+		myConn.close();	
+		guidelinePath += guidelineFilenameTrace(guidelineID);
+		System.out.println("The full path of guidelineID : '" + guidelineID + "' is : '" +  guidelinePath + "'." );
+		return guidelinePath;
+	}
+	
+	public static void sentenceQuestionsInserter(int sentences_id, int questions_id) throws SQLException
+	{
+		// this method is to insert questions_id and according sentences_id
+		String sql = "INSERT into sentence_questions" + "(sentences_id,questions_id)"+"values(?,?)";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setInt(1, sentences_id);
+		pstmt.setInt(2, questions_id);
+		pstmt.executeUpdate();
+		myConn.close();		
+	}
+	
+	public static int sentenceIDtrace(int questions_id) throws SQLException 
+	{
+		// return the sentence_id from sentence_questions table using questions_id
+		int sentenceID = 0;
+		String sql = "SELECT sentences_id FROM sentence_questions WHERE questions_id = '" + questions_id + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			sentenceID  = result.getInt("sentences_id");
+			System.out.println("The sentenceID is : " +  sentenceID );
+		}	
+		myConn.close();		
+		return sentenceID;
+	}
+
+	public static int sentenceID(String sentenceContent) throws SQLException 
+	{
+		// return the sentence_id from sentences table using content of the sentence
+		int sentenceID = 0;
+		String sql = "SELECT sentences_id FROM sentences WHERE sentence_content = '" + sentenceContent + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			sentenceID  = result.getInt("sentences_id");
+			System.out.println("The sentenceID of '" + sentenceContent+ "' is : " +  sentenceID );
+		}	
+		myConn.close();		
+		return sentenceID;
+	}
+	
+	public static int questionID(String questionsContent) throws SQLException 
+	{
+		// return the question_id from questions table using content of the question
+		int questionID = 0;
+		String sql = "SELECT questions_id FROM questions WHERE questions_content = '" + questionsContent + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			questionID  = result.getInt("questions_id");
+			System.out.println("The questionID of " + questionsContent + " is : " +  questionID );
+		}	
+		myConn.close();		
+		return questionID;
+	}
+	
+	public static int guidelineIDfromSen(String sentenceContent) throws SQLException 
+	{
+		// return the guideline_id from sentences table using content of the sentence
+		int guidelineID = 0;
+		String sql = "SELECT guideline_id FROM sentences WHERE sentence_content = '" + sentenceContent + "'";
+		java.sql.Connection myConn = DbConnector.getConnection();
+		java.sql.Statement stmt = myConn.createStatement();
+		ResultSet result = stmt.executeQuery(sql);
+		while(result.next())
+		{
+			guidelineID = result.getInt("guideline_id");
+			System.out.println("The guidelineID of " + sentenceContent + " is : " + guidelineID );
+		}	
+		myConn.close();		
+		return guidelineID;
+	}
+	
+	public static void checkSource(String questionContent) throws SQLException
+	{
+		// the Check Source button will trigger this method to find target sentence from the PC of user
+		int sentence_id = 0;
+		int page_num = 0;
+		String file_path = "";
+		String file_name = "";
+		int question_id = questionID(questionContent);
+		sentence_id = sentenceIDtrace(question_id);
+		if(sentence_id != 0)
+		{
+			
+			String sql = "SELECT page_number,guideline_id FROM sentences WHERE sentences_id = '" + sentence_id + "'";
+			java.sql.Connection myConn = DbConnector.getConnection();
+			java.sql.Statement stmt = myConn.createStatement();
+			ResultSet result = stmt.executeQuery(sql);
+			while(result.next())
+			{
+				page_num = result.getInt("page_number");
+				file_path = guidelinePathTrace(result.getInt("guideline_id"));
+				file_name = guidelineFilenameTrace(result.getInt("guideline_id"));
+			}
+			myConn.close();
+			System.out.println("Sentence found; the source guidline stores in '" + file_path + "', on page: " + page_num);
+			//TODO use the variables to display the source sentence
+		}
 	}
 	
 	public static void test()

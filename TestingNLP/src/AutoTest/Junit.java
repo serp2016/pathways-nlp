@@ -27,8 +27,8 @@ public class Junit
 	}
 	
 	// this method is to test if the question has been transformed into right format
-	public static String chestPainExamples(String guidelineText) throws SQLException
+	public static String textProcesserExamples(String guidelineText) throws SQLException
 	{
-        return Test.TextProcesser.processer(guidelineText,"111");
+        return Test.TextProcesser.processer(guidelineText);
 	}
 }
