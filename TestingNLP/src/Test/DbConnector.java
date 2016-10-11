@@ -32,7 +32,6 @@ public class DbConnector
 	
 	public static void sentencesTableLoader() throws SQLException
 	{
-//		Test.SentenceTable tread = new SentenceTable();
 //		ArrayList<String> inputSet = new ArrayList<String>();
  		java.sql.Connection myConn = DbConnector.getConnection();
 		String sql = "SELECT sentence_content FROM sentences";
@@ -115,10 +114,11 @@ public class DbConnector
 	{
 		// return the guideline_id from guidelines table using the guidelineName or fileName
 		int guidelineID = 0;
-		String sql = "SELECT guideline_id FROM guidelines WHERE guidelineName = '" + keyInfo + "'";
+		String sql = "SELECT guideline_id FROM guidelines WHERE guidelineName = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setString(1, keyInfo);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			guidelineID  = result.getInt("guideline_id");
@@ -126,9 +126,10 @@ public class DbConnector
 		}
 		if(guidelineID == 0)
 		{
-			sql = "SELECT guideline_id FROM guidelines WHERE fileName = '" + keyInfo + "'";
-			stmt = myConn.createStatement();
-			result = stmt.executeQuery(sql);
+			sql = "SELECT guideline_id FROM guidelines WHERE fileName = ?";
+			pstmt = myConn.prepareStatement(sql);
+			pstmt.setString(1, keyInfo);			
+			result = pstmt.executeQuery();
 			while(result.next())
 			{
 				guidelineID  = result.getInt("guideline_id");
@@ -142,10 +143,11 @@ public class DbConnector
 	{
 		//return the filename from guidelines table using guideline_id
 		String guidelineFilename = "";
-		String sql = "SELECT filename FROM guidelines WHERE guideline_id = '" + guidelineID + "'";
+		String sql = "SELECT filename FROM guidelines WHERE guideline_id = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setInt(1, guidelineID);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			guidelineFilename  = result.getString("filename");
@@ -158,10 +160,11 @@ public class DbConnector
 	{
 		// return the full file path from guidelines table using guideline_id
 		String guidelinePath = "";
-		String sql = "SELECT filepath FROM guidelines WHERE guideline_id = '" + guidelineID + "'";
+		String sql = "SELECT filepath FROM guidelines WHERE guideline_id = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setInt(1, guidelineID);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			guidelinePath  = result.getString("filepath");
@@ -188,10 +191,11 @@ public class DbConnector
 	{
 		// return the sentence_id from sentence_questions table using questions_id
 		int sentenceID = 0;
-		String sql = "SELECT sentences_id FROM sentence_questions WHERE questions_id = '" + questions_id + "'";
+		String sql = "SELECT sentences_id FROM sentence_questions WHERE questions_id = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setInt(1, questions_id);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			sentenceID  = result.getInt("sentences_id");
@@ -205,10 +209,11 @@ public class DbConnector
 	{
 		// return the sentence_id from sentences table using content of the sentence
 		int sentenceID = 0;
-		String sql = "SELECT sentences_id FROM sentences WHERE sentence_content = '" + sentenceContent + "'";
+		String sql = "SELECT sentences_id FROM sentences WHERE sentence_content = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setString(1, sentenceContent);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			sentenceID  = result.getInt("sentences_id");
@@ -222,10 +227,11 @@ public class DbConnector
 	{
 		// return the question_id from questions table using content of the question
 		int questionID = 0;
-		String sql = "SELECT questions_id FROM questions WHERE questions_content = '" + questionsContent + "'";
+		String sql = "SELECT questions_id FROM questions WHERE questions_content = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setString(1, questionsContent);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			questionID  = result.getInt("questions_id");
@@ -239,14 +245,15 @@ public class DbConnector
 	{
 		// return the guideline_id from sentences table using content of the sentence
 		int guidelineID = 0;
-		String sql = "SELECT guideline_id FROM sentences WHERE sentence_content = '" + sentenceContent + "'";
+		String sql = "SELECT guideline_id FROM sentences WHERE sentence_content = ?";
 		java.sql.Connection myConn = DbConnector.getConnection();
-		java.sql.Statement stmt = myConn.createStatement();
-		ResultSet result = stmt.executeQuery(sql);
+		PreparedStatement pstmt = myConn.prepareStatement(sql);
+		pstmt.setString(1, sentenceContent);
+		ResultSet result = pstmt.executeQuery();
 		while(result.next())
 		{
 			guidelineID = result.getInt("guideline_id");
-			System.out.println("The guidelineID of " + sentenceContent + " is : " + guidelineID );
+			System.out.println("The guidelineID is: " + guidelineID + "; (" + sentenceContent + ")." );
 		}	
 		myConn.close();		
 		return guidelineID;
