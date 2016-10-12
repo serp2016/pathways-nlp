@@ -116,15 +116,15 @@ public class TextProcesser
 			        if(WhoExtractingTag==true)
 			        {
 			        	String singleQuestion = initialToken + extractedNNS + extraction + "?";
-			        	System.out.println(singleQuestion);
 			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion + "Insert success.");
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
 			        else
 			        {
 			        	String singleQuestion = initialToken + extraction + "?";
-			        	System.out.println(singleQuestion);
 			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion + "Insert success.");
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
 //			        String extractedText = initialToken + extraction + "?";

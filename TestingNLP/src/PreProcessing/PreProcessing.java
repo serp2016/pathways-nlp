@@ -37,6 +37,7 @@ public class PreProcessing
 				Matcher m = pdf.matcher(file.getName());
 				if(m.find())
 				{
+					Test.TestCoreNLP.guidelineProcessingIndicator = true;
 					DbConnector.guidelineTableInserter(file.getName(), inputPath);
 					System.out.println(file.getName() + " inserted into database.");
 					String tmpStr = inputPath + "/" + file.getName();
