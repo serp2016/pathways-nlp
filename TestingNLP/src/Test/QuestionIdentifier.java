@@ -39,6 +39,14 @@ public class QuestionIdentifier
 					if((word.toLowerCase().equals("whether"))||(word.toLowerCase().equals("if"))||(word.toLowerCase().equals("when"))||(word.toLowerCase().equals("who")))
 						questionTag = true;
 				}
+				else if(word.matches("\\?"))
+				{
+					questionTag = false;
+					System.out.println(material);
+					System.out.println("Question inside.");
+					System.out.println("Insert complete");
+					return questionTag;
+				}
 			}
 			// if there is a question found in material
 			if(questionTag)

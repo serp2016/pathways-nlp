@@ -74,7 +74,7 @@ public class DbConnector
 		myConn.close();
 	}
 	
-	public static void guidelineNameUpdate (String fileName, String newName) throws SQLException
+	public static void guidelineNameUpdate(String fileName, String newName) throws SQLException
 	{
 		// this method is to rename the guideline with the guidelineName
 		String sql = "UPDATE guidelines SET guidelineName = ? " + "WHERE filename = ?";
@@ -122,7 +122,7 @@ public class DbConnector
 		while(result.next())
 		{
 			guidelineID  = result.getInt("guideline_id");
-			System.out.println("The guidelineID of " + keyInfo + " is : " +  guidelineID );
+			System.out.println("The guidelineID of (" + keyInfo + ") is : " +  guidelineID );
 		}
 		if(guidelineID == 0)
 		{

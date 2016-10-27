@@ -16,7 +16,6 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class ConjunctionSplitter
 {
-
 	public static ArrayList<String> conSplitter(String inputsentence)
 	{
 		ArrayList<String> output = new ArrayList<String>();
