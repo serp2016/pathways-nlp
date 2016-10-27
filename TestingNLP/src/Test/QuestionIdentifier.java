@@ -14,9 +14,11 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class QuestionIdentifier 
 {
+	public static boolean directQuestion = false;
 	public static boolean questionFlag(String material)
 	{
 		boolean questionTag = false;
+		QuestionIdentifier.directQuestion = false;
 		Properties props = new Properties();
 		props.put("annotators", "tokenize, ssplit, pos");
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
@@ -43,8 +45,9 @@ public class QuestionIdentifier
 				{
 					questionTag = false;
 					System.out.println(material);
-					System.out.println("Question inside.");
-					System.out.println("Insert complete");
+					QuestionIdentifier.directQuestion = true;
+//					System.out.println("Question inside.");
+//					System.out.println("Insert complete");
 					return questionTag;
 				}
 			}
