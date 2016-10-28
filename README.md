@@ -81,7 +81,7 @@ Click "sumbit" button, the processor will start extracting questions.(May take a
 * **He Jiang** 
 * **JingWen Wei** 
 
-Natural Language Processing is our main part, the user interface may not working because of different local configure settings. The project works well in the Ingenuity 2016.
+Natural Language Processing is our main part, the user interface may not working because of different local configure settings. This project worked well in the Ingenuity 2016.
 
 Please have no hesitate on contacting us if you have any questions. My email: a1684889@student.adelaide.edu.au
 
