@@ -23,7 +23,7 @@ public class TextProcesser
 	{
 		String questionExtraction = "";
     	boolean WhoExtractingTag = false;
-		int guideline_id = DbConnector.guidelineIDfromSen(guidelineText);
+//		int guideline_id = DbConnector.guidelineIDfromSen(guidelineText);
         // check if the text have potential question to be extracted
         if(QuestionIdentifier.questionFlag(guidelineText))
         {		    
@@ -122,19 +122,24 @@ public class TextProcesser
 			        if(WhoExtractingTag==true)
 			        {
 			        	String singleQuestion = initialToken + extractedNNS + extraction + "?";
-			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
-			        	System.out.println(singleQuestion + "\r\nInsert success.");
+//			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion);
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
 			        else
 			        {
 			        	String singleQuestion = initialToken + extraction + "?";
-			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
-			        	System.out.println(singleQuestion + "\r\nInsert success.");
+//			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion);
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
 			    }
 		    }
+        }
+        else if(QuestionIdentifier.directQuestion)
+        {
+        	questionExtraction = "#* " + guidelineText;
+        	QuestionIdentifier.directQuestion = false;
         }
         else
         {
