@@ -16,56 +16,59 @@ Put ‘IIESWebsite’ folder in this directory
 ```
 /Applications/XAMPP/xamppfiles/htdocs
 ```
-!!important!! 
-1. Operating System must be macOS
-2. Our IIES need a long time to process sentencens from the guideline, so, it should take about one and a half hour to process this "Clinical Guideline - Chest pain of recent onset.pdf" guideline.
+
+
+
 
 ### Run IIES
 
-Run XAMPP Apache server(make sure the port is 80)
+Run XAMPP Apache server(make sure the port is 80).
 
-Enter this url into browser’s address bar
+Change the directory path of "IIESProcessor.jar" in "testexec.php" if the path is different. (Commented out in testexec.php)
+
+Enter this url into browser’s address bar. 
+```
+localhost/IIESWebsite/testexec.php
+```
+Click "sumbit" button, the processor will start extracting questions.(May take about one and half hour to process the guideline).
+
+After the extraction finished, enter this url into browser’s address bar.
 ```
 localhost/IIESWebsite/search.php
 ```
 
+Search keywords like "chest pain" or "ACS" or "do people have a normal resting".
+
+Some results will be listed under the search bar, then, click "Check Source" to see the source pdf page.
 
 
 ```
 until finished
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
 
-## Running the tests
+**Important Stuffs** 
 
-Explain how to run the automated tests for this system
+1. Operating System must be macOS
 
-### Break down into end to end tests
+2. Our IIES need a long time to process sentencens from the guideline, so, it should take about one and a half hour to process this "Clinical Guideline - Chest pain of recent onset.pdf" guideline.
 
-Explain what these tests test and why
+3. Our pdf highlight function is in a trail, it will expried on 9th Nov.
 
-```
-Give an example
-```
+4. It may take about 30s to display the pdf page after you click "chech source" button, please be patient.
 
-### And coding style tests
+5. Don't shut down your PC when the processor is working.
 
-Explain what these tests test and why
+6. Our core NLP part has been packaged as a jar file named as "IIESProcessor.jar"
 
-```
-Give an example
-```
 
-## Deployment
 
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [PHP](http://php.net/) - The front end used
+* [Stanford CoreNLP Toolkits](http://stanfordnlp.github.io/CoreNLP/) - Core NLP Library
+* [setaPDF-Extractor](https://www.setasign.com/products/setapdf-extractor/demos/get-words/#p-368) - Used to Highlight sentences
 
 
 ## Authors
@@ -73,6 +76,5 @@ Add additional notes about how to deploy this on a live system
 * **He Jiang** 
 * **JingWen Wei** 
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
+Please have no hesitate on contacting us if you have any questions. My email: a1684889@student.adelaide.edu.au
 
