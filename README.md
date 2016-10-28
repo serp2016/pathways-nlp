@@ -26,34 +26,31 @@ Run XAMPP Apache server(make sure the port is 80).
 
 Change the directory path of "IIESProcessor.jar" in "testexec.php" if the path is different. (Commented out in testexec.php)
 
-Enter this url into browser’s address bar. 
-```
-localhost/IIESWebsite/testexec.php
-```
-Click "sumbit" button, the processor will start extracting questions.(May take about one and half hour to process the guideline).
+
+You can upload pdf files into uploads folder, choose a pdf file from your PC and click upload, the processor will start extracting questions.(May take about one and half hour to process the guideline). 
 
 After the extraction finished, enter this url into browser’s address bar.
 ```
 localhost/IIESWebsite/search.php
 ```
 
+
+
 Search keywords like "chest pain" or "ACS" or "do people have a normal resting".
+
 
 Some results will be listed under the search bar, then, click "Check Source" to see the source pdf page.
 
 
-```
-until finished
-```
 
 
 **Important Stuffs** 
 
-1. Operating System must be macOS
+1. Operating System must be macOS X
 
 2. Our IIES need a long time to process sentencens from the guideline, so, it should take about one and a half hour to process this "Clinical Guideline - Chest pain of recent onset.pdf" guideline.
 
-3. Our pdf highlight function is in a trail, it will expried on 9th Nov.
+3. Our pdf highlight function is in a trail, it will be expired on 9th Nov.
 
 4. It may take about 30s to display the pdf page after you click "chech source" button, please be patient.
 
@@ -61,8 +58,15 @@ until finished
 
 6. Our core NLP part has been packaged as a jar file named as "IIESProcessor.jar"
 
+7. You probably get some errors with "ionCube" when you click "Check source button", please visit this website(http://www.ioncube.com/loaders.php) to download the loader packages for OS X (64bit), the "readme" file in that package folder would be helpful.
 
+8. If you can't get any results after searching, use this file to start processing again.
 
+Enter this url into browser’s address bar. 
+```
+localhost/IIESWebsite/testexec.php
+```
+Click "sumbit" button, the processor will start extracting questions.(May take about one and half hour to process the guideline). 
 
 ## Built With
 
@@ -75,6 +79,8 @@ until finished
 
 * **He Jiang** 
 * **JingWen Wei** 
+
+Natural Language Processing is our main part, the user interface may not working because of different local configure settings. The project works well in the Ingenuity 2016.
 
 Please have no hesitate on contacting us if you have any questions. My email: a1684889@student.adelaide.edu.au
 
