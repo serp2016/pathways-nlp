@@ -8,23 +8,28 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Download the XAMPP(https://www.apachefriends.org/index.html)
 
+Download IIES source code from our repository
+
+Put ‘IIESWebsite’ folder in this directory 
 ```
-Give examples
+/Applications/XAMPP/xamppfiles/htdocs
+```
+!!important!! 
+1. Operating System must be macOS
+2. Our IIES need a long time to process sentencens from the guideline, so, it should take about one and a half hour to process this "Clinical Guideline - Chest pain of recent onset.pdf" guideline.
+
+### Run IIES
+
+Run XAMPP Apache server(make sure the port is 80)
+
+Enter this url into browser’s address bar
+```
+localhost/IIESWebsite/search.php
 ```
 
-### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
 
 ```
 until finished
