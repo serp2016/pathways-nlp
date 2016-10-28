@@ -95,6 +95,12 @@ public class TextProcesser
 		                			extraction += " " + word;
 		                		}
 		                	}
+		            		else if(word.matches("-LRB-")) extraction += " (";
+		            		else if(word.matches("-RRB-")) extraction += " )";
+		            		else if(word.matches("[\\d \\.]+"))
+		            		{
+		            			extraction += " " + word;
+		            		}
 		            		else
 		            		{
 		            			extracting = false;
@@ -116,21 +122,17 @@ public class TextProcesser
 			        if(WhoExtractingTag==true)
 			        {
 			        	String singleQuestion = initialToken + extractedNNS + extraction + "?";
-			        	System.out.println(singleQuestion);
 			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion + "\r\nInsert success.");
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
 			        else
 			        {
 			        	String singleQuestion = initialToken + extraction + "?";
-			        	System.out.println(singleQuestion);
 			        	DbConnector.questionTableInserter(singleQuestion, guidelineText, guideline_id);
+			        	System.out.println(singleQuestion + "\r\nInsert success.");
 			        	questionExtraction += "#* " + singleQuestion;
 			        }
-//			        String extractedText = initialToken + extraction + "?";
-//			        DbConnector.questionTableInserter(extractedText,guideline_id);
-//			        System.out.print("Insert Success");
-
 			    }
 		    }
         }
