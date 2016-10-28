@@ -16,8 +16,9 @@ Put ‘IIESWebsite’ folder in this directory
 ```
 /Applications/XAMPP/xamppfiles/htdocs
 ```
+Unzip "Library.zip" and put that folder into "IIESWebsite" folder
 
-
+Package IIESProcessor
 
 
 ### Run IIES
