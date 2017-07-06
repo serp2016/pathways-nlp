@@ -75,7 +75,7 @@ Click "sumbit" button, the processor will start extracting questions.(May take a
 
 ## Built With
 
-* [Bootstrap, HTML, Css](http://getbootstrap.com/) - Front end
+* [Bootstrap, HTML, CSS](http://getbootstrap.com/) - Front end
 * [PHP](http://php.net/) - Front end & Back end
 * [Java](https://www.java.com/) - Back end
 * [Stanford CoreNLP Toolkits](http://stanfordnlp.github.io/CoreNLP/) - Core NLP Library
