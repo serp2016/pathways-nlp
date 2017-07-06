@@ -75,8 +75,9 @@ Click "sumbit" button, the processor will start extracting questions.(May take a
 
 ## Built With
 
-* [PHP](http://php.net/) - Back end
-* [Bootstrap, HTML, Css] - Front end
+* [Bootstrap, HTML, Css](http://getbootstrap.com/) - Front end
+* [PHP](http://php.net/) - Front end & Back end
+* [Java](https://www.java.com/) - Back end
 * [Stanford CoreNLP Toolkits](http://stanfordnlp.github.io/CoreNLP/) - Core NLP Library
 * [setaPDF-Extractor](https://www.setasign.com/products/setapdf-extractor/demos/get-words/#p-368) - Used to Highlight sentences
 
