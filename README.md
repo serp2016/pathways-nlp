@@ -89,5 +89,5 @@ Click "sumbit" button, the processor will start extracting questions.(May take a
 
 Natural Language Processing is our main part, the user interface may not working because of different local configure settings. This project worked well in the Ingenuity 2016.
 
-Please have no hesitate on contacting us if you have any questions. My email: a1684889@student.adelaide.edu.au ; jingwen.wei@student.adelaide.edu.au
+Please have no hesitate on contacting us if you have any questions. My email: riverjiangjh@gmail.com ; jingwen.wei@student.adelaide.edu.au
 
